@@ -12,6 +12,10 @@ class Account:
         return (f"Account number: {self.account_number}, Name: {self.name}, Balance: {self.balance}, "
                 f"PIN: {self.pin}")
 
+    def check_balance(self):
+        print(f"Balance: {self.balance}$")
+        choose_action()
+
     def change_pin(self):
         new_pin = int(input("Enter the new pin (4 digits): "))
         if new_pin == self.pin:
@@ -67,22 +71,22 @@ def choose_action():
     print("Log out: 6")
     num = int(input("Enter appropriate number: "))
     print()
-
-    if num == 1:
-        print("chech balance")
-    elif num == 2:
-        print("deposit")
-    elif num == 3:
-        print("withdraw")
-    elif num == 4:
-        print("change pin")
-    elif num == 5:
-        print("close account")
-    elif num == 6:
-        print("loged out")
-    else:
-        print("Input number from 1 to 7")
-        choose_action()
+    for user in user_list:
+        if num == 1:
+            user.check_balance()
+        elif num == 2:
+            print("deposit")
+        elif num == 3:
+            print("withdraw")
+        elif num == 4:
+            print("change pin")
+        elif num == 5:
+            print("close account")
+        elif num == 6:
+            print("loged out")
+        else:
+            print("Input number from 1 to 7")
+            choose_action()
 
 user_list = []
 
