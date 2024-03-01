@@ -66,6 +66,14 @@ def write_accounts():
         print("Account saved to accounts.json")
 
 
+def deserialization_func(obj):
+    return Account(obj["account_number"], obj["name"], obj["balance"], obj["pin"])
+
+
+def read_accounts():
+    with open('accounts.json', 'r') as json_file:
+        new_user_list = json.load(json_file, object_hook=deserialization_func)
+        return new_user_list
 
 
 def homepage():
