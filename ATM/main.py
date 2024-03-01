@@ -66,10 +66,17 @@ def homepage():
 
 
 def login():
-    print("Login")
-    enter_account_number = int(input("Enter your account number:"))
-    pin = int(input("Enter your pin: "))
-    choose_action()
+    while True:
+        print("Input Login Info")
+        account_number = str(input("Enter your account number: "))
+        pin = int(input("Enter your pin: "))
+        print()
+        for user in user_list:
+            if account_number == user.account_number and pin == user.pin:
+                print("Login Succesfully")
+                choose_action()
+                return
+        print("input valid account number and pin\n")
 
 
 def create_new_account():
@@ -105,14 +112,15 @@ def choose_action():
         elif num == 3:
             user.withdraw()
         elif num == 4:
-            print("change pin")
+            user.change_pin()
         elif num == 5:
-            print("close account")
+            user.close_account()
         elif num == 6:
-            print("loged out")
+            user.logout()
         else:
             print("Input number from 1 to 7")
             choose_action()
+
 
 user_list = []
 
