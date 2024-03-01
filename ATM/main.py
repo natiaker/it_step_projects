@@ -1,3 +1,4 @@
+import json
 import random
 
 
@@ -50,6 +51,22 @@ class Account:
     def logout(self):
         print("You have been logged out")
         homepage()
+
+
+def serialization_func(obj):
+    if isinstance(obj, Account):
+        return {"account_number": obj.account_number, "name": obj.name, "balance": obj.balance, "pin": obj.pin}
+    raise TypeError(f'Not type of Account')
+
+
+def write_accounts():
+    # translate account class into json and write in a file
+    with open('accounts.json', 'w') as json_file:
+        json.dump(user_list, json_file, default=serialization_func, indent=4)
+        print("Account saved to accounts.json")
+
+
+
 
 def homepage():
     print("Create new account: 1")
