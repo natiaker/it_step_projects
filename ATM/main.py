@@ -47,6 +47,9 @@ class Account:
             else:
                 print("Invalid PIN\n")
 
+    def logout(self):
+        print("You have been logged out")
+        homepage()
 
 def homepage():
     print("Create new account: 1")
