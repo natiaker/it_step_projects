@@ -16,6 +16,18 @@ class Account:
         print(f"Balance: {self.balance}$")
         choose_action()
 
+    def deposit(self):
+        amount = int(input("Enter the amount to deposit: "))
+        self.balance += amount
+        print(f"Balance: {self.balance}$")
+        choose_action()
+
+    def withdraw(self):
+        amount = int(input("Enter the amount to withdraw: "))
+        self.balance -= amount
+        print(f"Balance: {self.balance}$")
+        choose_action()
+
     def change_pin(self):
         new_pin = int(input("Enter the new pin (4 digits): "))
         if new_pin == self.pin:
@@ -75,9 +87,9 @@ def choose_action():
         if num == 1:
             user.check_balance()
         elif num == 2:
-            print("deposit")
+            user.deposit()
         elif num == 3:
-            print("withdraw")
+            user.withdraw()
         elif num == 4:
             print("change pin")
         elif num == 5:
