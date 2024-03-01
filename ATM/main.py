@@ -36,6 +36,17 @@ class Account:
             self.pin = new_pin
             print("PIN changed successfully")
 
+    def close_account(self):
+        while True:
+            pin = int(input("Enter your pin to close your account: "))
+            if pin == self.pin:
+                user_list.remove(self)
+                print("Goodbye, successfully closed your account\n")
+                homepage()
+                return
+            else:
+                print("Invalid PIN\n")
+
 
 def homepage():
     print("Create new account: 1")
