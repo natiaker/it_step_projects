@@ -25,11 +25,16 @@ class Account:
         choose_action(self)
 
     def withdraw(self):
-        amount = int(input("Enter the amount to withdraw: "))
-        self.balance -= amount
-        write_accounts()
-        print(f"Balance: {self.balance}$")
-        choose_action(self)
+        while True:
+            amount = int(input("Enter the amount to withdraw: "))
+            if self.balance >= amount:
+                self.balance -= amount
+                write_accounts()
+            else:
+                print("Not enough money to withdraw")
+            print(f"Balance: {self.balance}$")
+        else:
+            choose_action(self)
 
     def change_pin(self):
         new_pin = int(input("Enter the new pin (4 digits): "))
@@ -58,7 +63,7 @@ class Account:
                     print("Invalid PIN\n")
 
     def logout(self):
-        print("You have been logged out")
+        print("You have been logged out\n")
         homepage()
 
 
@@ -84,18 +89,20 @@ def read_accounts():
 
 
 def homepage():
-    print("Create new account: 1")
-    print("Login account: 2")
-    home = int(input("Enter appropriate number: "))
-    print()
-
-    if home == 1:
-        create_new_account()
-    elif home == 2:
-        login()
-    else:
-        print("Invalid")
-
+    while True:
+        print("Create new account: 1")
+        print("Login account: 2")
+        try:
+            home = int(input("Enter appropriate number: "))
+            print()
+            if home == 1:
+                create_new_account()
+            elif home == 2:
+                login()
+            else:
+                print("Invalid number\n")
+        except ValueError:
+            print("Type numbers only\n")
 
 def login():
     while True:
@@ -112,7 +119,7 @@ def login():
 
 
 def create_new_account():
-    print("create new account")
+    print("Create new account")
     account_number = str(random.randint(10000, 99999))
     name = str(input("Enter your name: "))
     pin = int(input("Enter your pin: "))
@@ -131,31 +138,32 @@ def create_new_account():
 
 
 def choose_action(account):
-    print()
-    print("Check Balance: 1")
-    print("Deposit money: 2")
-    print("Withdraw: 3")
-    print("Change Pin: 4")
-    print("Close account: 5")
-    print("Log out: 6")
-    num = int(input("Enter appropriate number: "))
-    print()
+    while True:
+        print()
+        print("Check Balance: 1")
+        print("Deposit money: 2")
+        print("Withdraw: 3")
+        print("Change PIN: 4")
+        print("Close account: 5")
+        print("Log out: 6\n")
+        num = int(input("Enter appropriate number: "))
+        print()
 
-    if num == 1:
-        account.check_balance()
-    elif num == 2:
-        account.deposit()
-    elif num == 3:
-        account.withdraw()
-    elif num == 4:
-        account.change_pin()
-    elif num == 5:
-        account.close_account()
-    elif num == 6:
-        account.logout()
-    else:
-        print("Input number from 1 to 7")
-        choose_action(account)
+        if num == 1:
+            account.check_balance()
+        elif num == 2:
+            account.deposit()
+        elif num == 3:
+            account.withdraw()
+        elif num == 4:
+            account.change_pin()
+        elif num == 5:
+            account.close_account()
+        elif num == 6:
+            account.logout()
+        else:
+            print("Input number from 1 to 6\n")
+            # choose_action(account)
 
 
 user_list = read_accounts()
