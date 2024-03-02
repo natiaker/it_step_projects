@@ -15,19 +15,21 @@ class Account:
 
     def check_balance(self):
         print(f"Balance: {self.balance}$")
-        choose_action()
+        choose_action(self)
 
     def deposit(self):
         amount = int(input("Enter the amount to deposit: "))
         self.balance += amount
+        write_accounts()
         print(f"Balance: {self.balance}$")
-        choose_action()
+        choose_action(self)
 
     def withdraw(self):
         amount = int(input("Enter the amount to withdraw: "))
         self.balance -= amount
+        write_accounts()
         print(f"Balance: {self.balance}$")
-        choose_action()
+        choose_action(self)
 
     def change_pin(self):
         new_pin = int(input("Enter the new pin (4 digits): "))
@@ -35,18 +37,25 @@ class Account:
             print("You are currently using this PIN")
         else:
             self.pin = new_pin
+            write_accounts()
             print("PIN changed successfully")
+        choose_action(self)
 
     def close_account(self):
         while True:
-            pin = int(input("Enter your pin to close your account: "))
-            if pin == self.pin:
-                user_list.remove(self)
-                print("Goodbye, successfully closed your account\n")
-                homepage()
-                return
+            if self.balance > 0:
+                print(f"Withdraw money before closing your account. Balance: {self.balance}$")
+                self.withdraw()
             else:
-                print("Invalid PIN\n")
+                pin = int(input("Enter your pin to close your account: "))
+                if pin == self.pin:
+                    user_list.remove(self)
+                    write_accounts()
+                    print("Goodbye, successfully closed your account\n")
+                    homepage()
+                    return
+                else:
+                    print("Invalid PIN\n")
 
     def logout(self):
         print("You have been logged out")
@@ -60,10 +69,8 @@ def serialization_func(obj):
 
 
 def write_accounts():
-    # translate account class into json and write in a file
     with open('accounts.json', 'w') as json_file:
         json.dump(user_list, json_file, default=serialization_func, indent=4)
-        print("Account saved to accounts.json")
 
 
 def deserialization_func(obj):
@@ -98,28 +105,32 @@ def login():
         print()
         for user in user_list:
             if account_number == user.account_number and pin == user.pin:
-                print("Login Succesfully")
-                choose_action()
+                print("Login Successfully")
+                choose_action(user)
                 return
         print("input valid account number and pin\n")
 
 
 def create_new_account():
-    account_number = random.randint(10000, 99999)
+    print("create new account")
+    account_number = str(random.randint(10000, 99999))
     name = str(input("Enter your name: "))
     pin = int(input("Enter your pin: "))
     initial_balance = int(input("Enter your initial balance: "))
+    print()
 
     account = Account(account_number, name, initial_balance, pin)
     user_list.append(account)
-    print(f"Succesfully created account: {account}")
+    write_accounts()
+    print(f"Successfully created account: {account}")
+    print("User list: ")
     for user in user_list:
         print(user)
     print()
     homepage()
 
 
-def choose_action():
+def choose_action(account):
     print()
     print("Check Balance: 1")
     print("Deposit money: 2")
@@ -129,24 +140,25 @@ def choose_action():
     print("Log out: 6")
     num = int(input("Enter appropriate number: "))
     print()
-    for user in user_list:
-        if num == 1:
-            user.check_balance()
-        elif num == 2:
-            user.deposit()
-        elif num == 3:
-            user.withdraw()
-        elif num == 4:
-            user.change_pin()
-        elif num == 5:
-            user.close_account()
-        elif num == 6:
-            user.logout()
-        else:
-            print("Input number from 1 to 7")
-            choose_action()
+
+    if num == 1:
+        account.check_balance()
+    elif num == 2:
+        account.deposit()
+    elif num == 3:
+        account.withdraw()
+    elif num == 4:
+        account.change_pin()
+    elif num == 5:
+        account.close_account()
+    elif num == 6:
+        account.logout()
+    else:
+        print("Input number from 1 to 7")
+        choose_action(account)
 
 
-user_list = []
+user_list = read_accounts()
 
 homepage()
+
