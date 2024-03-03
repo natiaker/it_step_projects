@@ -1,172 +1,133 @@
-import json
 import random
 
-
-class Account:
-    def __init__(self, account_number, name, balance, pin):
-        self.account_number = account_number
-        self.name = name
-        self.balance = balance
-        self.pin = pin
-
-    def __str__(self):
-        return (f"Account number: {self.account_number}, Name: {self.name}, Balance: {self.balance}, "
-                f"PIN: {self.pin}")
-
-    def check_balance(self):
-        print(f"Balance: {self.balance}$")
-        choose_action(self)
-
-    def deposit(self):
-        amount = int(input("Enter the amount to deposit: "))
-        self.balance += amount
-        write_accounts()
-        print(f"Balance: {self.balance}$")
-        choose_action(self)
-
-    def withdraw(self):
-        while True:
-            amount = int(input("Enter the amount to withdraw: "))
-            if self.balance >= amount:
-                self.balance -= amount
-                write_accounts()
-            else:
-                print("Not enough money to withdraw")
-            print(f"Balance: {self.balance}$")
-        else:
-            choose_action(self)
-
-    def change_pin(self):
-        new_pin = int(input("Enter the new pin (4 digits): "))
-        if new_pin == self.pin:
-            print("You are currently using this PIN")
-        else:
-            self.pin = new_pin
-            write_accounts()
-            print("PIN changed successfully")
-        choose_action(self)
-
-    def close_account(self):
-        while True:
-            if self.balance > 0:
-                print(f"Withdraw money before closing your account. Balance: {self.balance}$")
-                self.withdraw()
-            else:
-                pin = int(input("Enter your pin to close your account: "))
-                if pin == self.pin:
-                    user_list.remove(self)
-                    write_accounts()
-                    print("Goodbye, successfully closed your account\n")
-                    homepage()
-                    return
-                else:
-                    print("Invalid PIN\n")
-
-    def logout(self):
-        print("You have been logged out\n")
-        homepage()
+from ATM.account import Account, AccountManager
 
 
-def serialization_func(obj):
-    if isinstance(obj, Account):
-        return {"account_number": obj.account_number, "name": obj.name, "balance": obj.balance, "pin": obj.pin}
-    raise TypeError(f'Not type of Account')
-
-
-def write_accounts():
-    with open('accounts.json', 'w') as json_file:
-        json.dump(user_list, json_file, default=serialization_func, indent=4)
-
-
-def deserialization_func(obj):
-    return Account(obj["account_number"], obj["name"], obj["balance"], obj["pin"])
-
-
-def read_accounts():
-    with open('accounts.json', 'r') as json_file:
-        new_user_list = json.load(json_file, object_hook=deserialization_func)
-        return new_user_list
-
-
-def homepage():
+def homepage(account_manager):
     while True:
+        account_manager.write_accounts()
         print("Create new account: 1")
         print("Login account: 2")
         try:
             home = int(input("Enter appropriate number: "))
             print()
             if home == 1:
-                create_new_account()
+                create_new_account(account_manager)
             elif home == 2:
-                login()
+                login(account_manager)
+            elif home == 3:
+                return
             else:
                 print("Invalid number\n")
         except ValueError:
             print("Type numbers only\n")
 
-def login():
+
+def login(account_manager):
     while True:
         print("Input Login Info")
         account_number = str(input("Enter your account number: "))
+        account = account_manager.check_account(account_number)
         pin = int(input("Enter your pin: "))
-        print()
-        for user in user_list:
-            if account_number == user.account_number and pin == user.pin:
-                print("Login Successfully")
-                choose_action(user)
-                return
-        print("input valid account number and pin\n")
-
-
-def create_new_account():
-    print("Create new account")
-    account_number = str(random.randint(10000, 99999))
-    name = str(input("Enter your name: "))
-    pin = int(input("Enter your pin: "))
-    initial_balance = int(input("Enter your initial balance: "))
-    print()
-
-    account = Account(account_number, name, initial_balance, pin)
-    user_list.append(account)
-    write_accounts()
-    print(f"Successfully created account: {account}")
-    print("User list: ")
-    for user in user_list:
-        print(user)
-    print()
-    homepage()
-
-
-def choose_action(account):
-    while True:
-        print()
-        print("Check Balance: 1")
-        print("Deposit money: 2")
-        print("Withdraw: 3")
-        print("Change PIN: 4")
-        print("Close account: 5")
-        print("Log out: 6\n")
-        num = int(input("Enter appropriate number: "))
-        print()
-
-        if num == 1:
-            account.check_balance()
-        elif num == 2:
-            account.deposit()
-        elif num == 3:
-            account.withdraw()
-        elif num == 4:
-            account.change_pin()
-        elif num == 5:
-            account.close_account()
-        elif num == 6:
-            account.logout()
+        if account is None or not account.pin == pin:
+            print("input valid account number or pin\n")
+            break
         else:
-            print("Input number from 1 to 6\n")
-            # choose_action(account)
+            print("Login successful\n")
+        choose_action(account_manager, account)
 
 
-user_list = read_accounts()
+def create_new_account(account_manager):
+    while True:
+        print("Create new account")
 
-homepage()
+        while True:
+            account_number = str(random.randint(10000, 99999))
+            if not account_manager.check_account(account_number):
+                break  # Exit the loop if the account number is unique
+            return account_number
 
+        name = str(input("Enter your name: "))
+        pin = int(input("Enter your pin: "))
+        initial_balance = 0
+        print()
+
+        if not len(str(pin)) == 4:
+            print("Invalid PIN. Please enter a 4-digit number.\n")
+            continue
+        else:
+            account = Account(account_number, name, initial_balance, pin)
+            account_manager.add_account(account)
+            print(f"Successfully created account: {account}\n")
+        homepage(account_manager)
+
+
+def choose_action(account_manager, account):
+    while True:
+        actions = """
+Check Balance: 1
+Deposit money: 2
+Withdraw: 3
+Change PIN: 4
+Close account: 5
+Log out: 6
+Enter appropriate number: """
+        try:
+            num = int(input(actions))
+            print()
+
+            if num == 1:
+                print(f"Balance: {account.getbalance()}$")
+            elif num == 2:
+                amount = int(input("Enter the amount to deposit: "))
+                account.deposit(amount)
+                print(f"Balance: {account.getbalance()}$")
+            elif num == 3:
+                amount = int(input("Enter the amount to withdraw: "))
+                account.withdraw(amount)
+                print(f"Balance: {account.getbalance()}$\n")
+            elif num == 4:
+                while True:
+                    new_pin = int(input("Enter the new pin (4 digits): "))
+                    if len(str(new_pin)) == 4 and str(new_pin).isdigit():
+                        if new_pin == account.get_pin():
+                            print(f"You already using this PIN")
+                            break
+                        account.change_pin(new_pin)
+                        print("PIN changed successfully")
+                        break
+                    print("Invalid PIN. Please enter a 4-digit number.\n")
+            elif num == 5:
+                while True:
+                    print("All your money will be withdrawn after entering PIN.")
+                    print("ENTER 1 to quit")
+                    pin = int(input("Enter your pin to close your account: "))
+                    if pin == account.get_pin():
+                        if account.getbalance() > 0:
+                            print(f"Withdrawing money. Balance: {account.getbalance()}$")
+                            account.withdraw(account.getbalance())
+                        account_manager.delete_account(account)
+                        print("Goodbye, successfully closed your account\n")
+                        homepage(account_manager)
+                        return
+                    elif pin == 1:
+                        break
+                    else:
+                        print("Invalid PIN\n")
+
+            elif num == 6:
+                homepage(account_manager)
+            else:
+                print("Input number from 1 to 6\n")
+        except ValueError:
+            print("Invalid Value. Input numbers only")
+
+
+def main():
+    account_manager = AccountManager()
+    account_manager.read_accounts()
+    homepage(account_manager)
+
+
+if __name__ == "__main__":
+    main()
