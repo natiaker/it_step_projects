@@ -1,0 +1,17 @@
+[
+    {
+        "name": "John Doe",
+        "roll_number": 1,
+        "grade": 99
+    },
+    {
+        "name": "Harry Manson",
+        "roll_number": 2,
+        "grade": 100
+    },
+    {
+        "name": "Liam Miller",
+        "roll_number": 3,
+        "grade": 95
+    }
+]
