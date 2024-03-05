@@ -1,4 +1,5 @@
 import random
+import sys
 
 from ATM.account import Account, AccountManager
 
@@ -18,7 +19,7 @@ def homepage(account_manager):
             elif home == 2:
                 login(account_manager)
             elif home == 3:
-                return  # exit loop and program
+                sys.exit()  # exit loop and program
             else:
                 print("Invalid number\n")
         except ValueError:
@@ -125,7 +126,7 @@ Enter appropriate number: """
                 print("Input number from 1 to 6\n")
         # handle ValueError
         except ValueError:
-            print("Invalid Value. Input numbers only")
+            print("Invalid Value. Input numbers only\n")
 
 
 # main function to start the program
