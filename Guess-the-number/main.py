@@ -5,7 +5,7 @@ import random
 def guess_number():
     # generate random integer
     secret_number = random.randint(1, 100)
-    print(secret_number)
+    # print(secret_number)
 
     count = 0  # count user attempts
     max_guesses = 10  # max number of guesses user has
@@ -28,7 +28,7 @@ def guess_number():
                     print(f"Congratulations! You guessed in {count} attempts. The secret number is {secret_number}.")
                     return
         except ValueError:
-            print("Please input a number")
+            print("Please input an integer")
     else:
         print(f"Sorry you ran out of attempts. The secret number was {secret_number}")
 
