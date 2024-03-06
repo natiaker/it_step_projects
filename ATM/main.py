@@ -1,7 +1,6 @@
 import random
-import sys
 
-from ATM.account import Account, AccountManager
+from account import Account, AccountManager
 
 
 # function for the homepage menu
@@ -19,7 +18,7 @@ def homepage(account_manager):
             elif home == 2:
                 login(account_manager)
             elif home == 3:
-                sys.exit()  # exit loop and program
+                break  # exit program
             else:
                 print("Invalid number\n")
         except ValueError:
@@ -40,6 +39,7 @@ def login(account_manager):
         else:
             print("Login successful\n")
         choose_action(account_manager, account)  # navigate to user profile to choose actions
+        break
 
 
 # create new account functionality
@@ -64,7 +64,7 @@ def create_new_account(account_manager):
             account = Account(account_number, name, initial_balance, pin)  # create Account class object
             account_manager.add_account(account)  # add the newly created account to the list using the account manager
             print(f"Successfully created account: {account}\n")
-        homepage(account_manager)
+        break
 
 
 # function to choose actions for logged-in users
@@ -114,14 +114,14 @@ Enter appropriate number: """
                             account.withdraw(account.getbalance())
                         account_manager.delete_account(account)
                         print("Goodbye, successfully closed your account\n")
-                        homepage(account_manager)
                         return
                     elif pin == 1:
                         break
                     else:
                         print("Invalid PIN\n")
+            # log out and return to homepage
             elif num == 6:
-                homepage(account_manager)
+                break
             else:
                 print("Input number from 1 to 6\n")
         # handle ValueError
