@@ -1,4 +1,5 @@
 import json
+import random
 
 ACCOUNT_FILE = "accounts.json"
 
@@ -96,3 +97,11 @@ class AccountManager:
     # method to remove specified account from the account list
     def delete_account(self, account):
         self.account_list.remove(account)
+
+    # generate unique account number for new user
+    def generate_account_number(self):
+        for i in range(100):
+            account_number = str(random.randint(10000, 99999))
+            if not self.check_account(account_number):
+                return account_number  # return if the account number is unique
+        return None

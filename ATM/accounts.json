@@ -6,21 +6,9 @@
         "pin": 2222
     },
     {
-        "account_number": "11815",
-        "name": "natia",
-        "balance": 922,
-        "pin": 1234
-    },
-    {
         "account_number": "48348",
         "name": "nika",
         "balance": 0,
-        "pin": 1234
-    },
-    {
-        "account_number": "34836",
-        "name": "natia",
-        "balance": 80,
         "pin": 1234
     },
     {
@@ -28,5 +16,17 @@
         "name": "tako",
         "balance": 1000,
         "pin": 3333
+    },
+    {
+        "account_number": "59048",
+        "name": "lali",
+        "balance": 1020,
+        "pin": 1234
+    },
+    {
+        "account_number": "14698",
+        "name": "aleko",
+        "balance": 980,
+        "pin": 1233
     }
 ]

@@ -1,4 +1,5 @@
 import random
+import time
 
 from account import Account, AccountManager
 
@@ -7,7 +8,6 @@ from account import Account, AccountManager
 # the user has the option to either log in or create a new account - using numbers.
 def homepage(account_manager):
     while True:
-        account_manager.write_accounts()  #
         print("Create new account: 1")
         print("Login account: 2")
         try:
@@ -46,12 +46,11 @@ def login(account_manager):
 def create_new_account(account_manager):
     while True:
         print("Create new account")
-        # generate unique account number for new user
-        while True:
-            account_number = str(random.randint(10000, 99999))
-            if not account_manager.check_account(account_number):
-                break  # Exit the loop if the account number is unique
-            return account_number
+        #  generate account number
+        account_number = account_manager.generate_account_number()
+        if account_number is None:
+            print("Account could not be created\n")
+            break
         # request user to input name and pin
         name = str(input("Enter your name: "))
         pin = int(input("Enter your pin: "))
@@ -63,6 +62,7 @@ def create_new_account(account_manager):
         else:
             account = Account(account_number, name, initial_balance, pin)  # create Account class object
             account_manager.add_account(account)  # add the newly created account to the list using the account manager
+            account_manager.write_accounts()  # save account in a file
             print(f"Successfully created account: {account}\n")
         break
 
@@ -113,6 +113,7 @@ Enter appropriate number: """
                             print(f"Withdrawing money. Balance: {account.getbalance()}$")
                             account.withdraw(account.getbalance())
                         account_manager.delete_account(account)
+                        account_manager.write_accounts()
                         print("Goodbye, successfully closed your account\n")
                         return
                     elif pin == 1:
@@ -127,6 +128,7 @@ Enter appropriate number: """
         # handle ValueError
         except ValueError:
             print("Invalid Value. Input numbers only\n")
+        account_manager.write_accounts()
 
 
 # main function to start the program
